@@ -4,6 +4,7 @@
 	"description": "An opinionated, physics-based toast notification library for Vue 3.",
 	"license": "MIT",
 	"type": "module",
+	"packageManager": "pnpm@9.15.9",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Diaz-Cruz/fork.git"
@@ -25,7 +26,6 @@
 	"scripts": {
 		"build": "vue-tsc --noEmit -p tsconfig.build.json && vite build",
 		"dev": "vite build --watch",
-		"play": "vite --config playground/vite.config.ts",
 		"typecheck": "vue-tsc --noEmit -p tsconfig.build.json"
 	},
 	"peerDependencies": {
