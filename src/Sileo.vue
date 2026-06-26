@@ -3,7 +3,6 @@ import { motion } from "motion-v";
 import {
 	computed,
 	getCurrentInstance,
-	nextTick,
 	onBeforeUnmount,
 	onMounted,
 	ref,
@@ -223,7 +222,7 @@ function setupContentObserver() {
 
 onMounted(() => {
 	setupPillObserver();
-	nextTick(setupContentObserver);
+	setupContentObserver();
 	readyRaf = requestAnimationFrame(() => {
 		ready.value = true;
 	});

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, shallowRef, watch } from "vue";
 import { DEFAULT_TOAST_DURATION } from "./constants";
 import Sileo from "./Sileo.vue";
 import { dismissToast, type SileoItem, store, timeoutKey } from "./store";
@@ -30,8 +30,7 @@ const expandDir = (pos: SileoPosition): "top" | "bottom" =>
 const theme = computed(() => props.theme);
 const resolvedTheme = useResolvedTheme(theme);
 
-const toasts = shallowRef<SileoItem[]>([]);
-const mounted = ref(false);
+const toasts = shallowRef<SileoItem[]>(store.toasts);
 const activeOverride = shallowRef<string | undefined>(undefined);
 
 const timers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -71,7 +70,6 @@ onMounted(() => {
 	store.options = props.options;
 	toasts.value = store.toasts;
 	store.listeners.add(listener);
-	mounted.value = true;
 	// scheduling is owned by the `toasts` watcher, which the assignment above triggers.
 });
 
@@ -181,45 +179,43 @@ function fillFor(item: SileoItem): string | undefined {
 
 <template>
 	<slot />
-	<template v-if="mounted">
-		<section
-			v-for="g in groups"
-			:key="g.pos"
-			data-sileo-viewport
-			:data-position="g.pos"
-			:data-theme="theme ? resolvedTheme : undefined"
-			aria-live="polite"
-			:style="viewportStyle(g.pos)"
+	<section
+		v-for="g in groups"
+		:key="g.pos"
+		data-sileo-viewport
+		:data-position="g.pos"
+		:data-theme="theme ? resolvedTheme : undefined"
+		aria-live="polite"
+		:style="viewportStyle(g.pos)"
+	>
+		<Sileo
+			v-for="item in g.items"
+			:id="item.id"
+			:key="item.id"
+			:state="item.state"
+			:title="item.title"
+			:description="item.description"
+			:position="pillAlign(g.pos)"
+			:expand="expandDir(g.pos)"
+			:fill="fillFor(item)"
+			:styles="item.styles"
+			:button="item.button"
+			:roundness="item.roundness"
+			:exiting="item.exiting"
+			:auto-expand-delay-ms="item.autoExpandDelayMs"
+			:auto-collapse-delay-ms="item.autoCollapseDelayMs"
+			:refresh-key="item.instanceId"
+			:can-expand="activeId === undefined || activeId === item.id"
+			@enter="onPillEnter(item.id)"
+			@leave="onPillLeave()"
+			@dismiss="dismissToast(item.id)"
 		>
-			<Sileo
-				v-for="item in g.items"
-				:id="item.id"
-				:key="item.id"
-				:state="item.state"
-				:title="item.title"
-				:description="item.description"
-				:position="pillAlign(g.pos)"
-				:expand="expandDir(g.pos)"
-				:fill="fillFor(item)"
-				:styles="item.styles"
-				:button="item.button"
-				:roundness="item.roundness"
-				:exiting="item.exiting"
-				:auto-expand-delay-ms="item.autoExpandDelayMs"
-				:auto-collapse-delay-ms="item.autoCollapseDelayMs"
-				:refresh-key="item.instanceId"
-				:can-expand="activeId === undefined || activeId === item.id"
-				@enter="onPillEnter(item.id)"
-				@leave="onPillLeave()"
-				@dismiss="dismissToast(item.id)"
-			>
-				<template v-if="$slots.icon" #icon="s"><slot name="icon" v-bind="s" /></template>
-				<template v-if="$slots.title" #title="s"><slot name="title" v-bind="s" /></template>
-				<template v-if="$slots.description" #description="s">
-					<slot name="description" v-bind="s" />
-				</template>
-				<template v-if="$slots.button" #button="s"><slot name="button" v-bind="s" /></template>
-			</Sileo>
-		</section>
-	</template>
+			<template v-if="$slots.icon" #icon="s"><slot name="icon" v-bind="s" /></template>
+			<template v-if="$slots.title" #title="s"><slot name="title" v-bind="s" /></template>
+			<template v-if="$slots.description" #description="s">
+				<slot name="description" v-bind="s" />
+			</template>
+			<template v-if="$slots.button" #button="s"><slot name="button" v-bind="s" /></template>
+		</Sileo>
+	</section>
 </template>
