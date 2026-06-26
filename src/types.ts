@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 export type SileoState =
 	| "success"
 	| "loading"
@@ -33,14 +31,51 @@ export type SileoPosition = (typeof SILEO_POSITIONS)[number];
 
 export interface SileoOptions {
 	title?: string;
-	description?: ReactNode | string;
+	description?: string;
 	type?: SileoState;
 	position?: SileoPosition;
 	duration?: number | null;
-	icon?: ReactNode | null;
 	styles?: SileoStyles;
 	fill?: string;
 	roundness?: number;
 	autopilot?: boolean | { expand?: number; collapse?: number };
 	button?: SileoButton;
+}
+
+/* ------------------------------- Toaster --------------------------------- */
+
+export type SileoOffsetValue = number | string;
+export type SileoOffsetConfig = Partial<
+	Record<"top" | "right" | "bottom" | "left", SileoOffsetValue>
+>;
+
+export interface SileoToasterProps {
+	position?: SileoPosition;
+	offset?: SileoOffsetValue | SileoOffsetConfig;
+	options?: Partial<SileoOptions>;
+	theme?: "light" | "dark" | "system";
+}
+
+/* --------------------------------- Slots --------------------------------- */
+
+/**
+ * Resolved per-toast render state passed to every scoped slot
+ * (`#icon`, `#title`, `#description`, `#button`) on `<Toaster>`.
+ */
+export interface SileoSlotProps {
+	id: string;
+	state: SileoState;
+	title?: string;
+	description?: string;
+	button?: SileoButton;
+	styles?: SileoStyles;
+}
+
+export interface SileoSlots {
+	/** Children rendered alongside the toast viewports (the React `children`). */
+	default?: () => unknown;
+	icon?: (props: SileoSlotProps) => unknown;
+	title?: (props: SileoSlotProps) => unknown;
+	description?: (props: SileoSlotProps) => unknown;
+	button?: (props: SileoSlotProps) => unknown;
 }
