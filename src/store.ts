@@ -105,7 +105,11 @@ const createToast = (options: InternalSileoOptions) => {
 
 	const id = merged.id ?? "sileo-default";
 	const prev = live.find((t) => t.id === id);
-	const item = buildSileoItem(merged, id, prev?.position);
+	// A fresh createToast honors the current store.position (the live <Toaster
+	// position>) rather than inheriting the previous same-id toast's position, so
+	// changing position takes effect immediately. Promise transitions keep their
+	// position via updateToast, which passes existing.position explicitly.
+	const item = buildSileoItem(merged, id);
 
 	if (prev) {
 		store.update((p) => p.map((t) => (t.id === id ? item : t)));

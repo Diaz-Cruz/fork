@@ -145,6 +145,7 @@
 	display: flex;
 	align-items: center;
 	padding: 0.5rem;
+	box-sizing: border-box;
 	height: var(--sileo-height);
 	overflow: hidden;
 	left: var(--_px, 0px);
@@ -192,7 +193,7 @@
 		both;
 }
 
-[data-sileo-header-inner][data-layer="current"]:not(:only-child),
+[data-sileo-header-inner][data-layer="current"],
 [data-sileo-header-inner][data-exiting="true"] {
 	will-change: opacity, filter;
 }
@@ -325,13 +326,13 @@
 }
 
 [data-sileo-description] {
+	box-sizing: border-box;
 	width: 100%;
 	text-align: left;
 	padding: 1rem;
 	font-size: 0.875rem;
 	line-height: 1.25rem;
 	contain: layout style paint;
-	content-visibility: auto;
 }
 
 /* --------------------------------- Button --------------------------------- */
@@ -379,6 +380,9 @@
 	from {
 		opacity: 0;
 		filter: blur(6px);
+	}
+	45% {
+		opacity: 1;
 	}
 	to {
 		opacity: 1;
