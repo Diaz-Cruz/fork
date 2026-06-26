@@ -1,12 +1,15 @@
-"use client";
-
 import "./styles.css";
 
-export { sileo, Toaster } from "./toast";
+export { default as Toaster } from "./Toaster.vue";
+export { sileo } from "./store";
+export type { SileoPromiseOptions } from "./store";
 export type {
 	SileoButton,
 	SileoOptions,
 	SileoPosition,
+	SileoSlotProps,
+	SileoSlots,
 	SileoState,
 	SileoStyles,
+	SileoToasterProps,
 } from "./types";
