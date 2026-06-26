@@ -7,7 +7,7 @@
 ### Installation
 
 ```bash
-npm i fork
+pnpm add fork
 ```
 
 ### Getting Started
@@ -83,3 +83,15 @@ slots on `<Toaster>` — each receives the resolved per-toast state:
 - `sileo.dismiss(id)` / `sileo.clear(position?)` — remove toasts.
 
 `options`: `{ title?, description?, duration?, position?, fill?, roundness?, autopilot?, styles?, button? }`.
+
+### Development
+
+This repo uses [pnpm](https://pnpm.io) (`packageManager` is pinned in
+`package.json`; run via Corepack or a matching local pnpm).
+
+```bash
+pnpm install      # install dependencies
+pnpm build        # type-check + build the package to dist/
+pnpm typecheck    # type-check only
+pnpm dev          # rebuild the package on change (watch mode)
+```
